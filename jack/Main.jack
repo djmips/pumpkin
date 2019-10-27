@@ -9,6 +9,7 @@
 class Main {
 
     static int screenLocation;
+    static int keyboard;
 
 
     function void main() {
@@ -21,7 +22,8 @@ class Main {
 	// ... Variables for managing the game
 	var char key;
 	var boolean exit, moved;
-	var int i, location, memAddress;
+	var int i, location, oldLocation, memAddress;
+    var int cooldown;
 	var String endText, scoreText;
 
 	// Array initialisations
@@ -34,10 +36,13 @@ class Main {
 	let key = 0;               /* which key the user pressed*/
 	let moved = true;          /* only updates the display if an action took place */
 	let exit = false;          /* whether the game is over*/
+    let cooldown = 4000;
 
+    let oldLocation = 0;
     let location = 2048;    /* starting pos for player */
 
     let screenLocation = 16384;
+    let keyboard = 24576;
 
 
 	// Start Up Screen
@@ -51,21 +56,29 @@ class Main {
 	while (~exit) {
 
 	    // User Input
-	    // Forward (up-arrow)
-	    //if (key = 131) {
-		//let moved = true; }
+	    // (up-arrow)
+	    if (key = 131) {
+            let oldLocation = location;
+            let location = location - 512;
+		    let moved = true; 
+        }
 
-	    // Backward (down-arrow)
-	    //if (key = 133) {
-		//let moved = true; }
+	    // (down-arrow)
+	    if (key = 133) {        
+            let oldLocation = location;
+            let location = location + 512;
+		    let moved = true; 
+        }
 
 	    // (left-arrow)
 	    if (key = 130) {
+            let oldLocation = location;
             let location = location - 2;
 		    let moved = true; 
         }
 	    // (right-arrow)
 	    if (key = 132) {
+            let oldLocation = location;
             let location = location + 2;
 		    let moved = true;
 	    }
@@ -78,27 +91,6 @@ class Main {
             // Draw a pumpkin
 
             let memAddress = location;
-
-            //do Memory.poke(memAddress-32,0);
-            //do Memory.poke(memAddress+0, 384);
-            //do Memory.poke(memAddress+32, 384);
-            //do Memory.poke(memAddress+64, 8176);
-            //do Memory.poke(memAddress+96, 16380);
-            //do Memory.poke(memAddress+128, 32766);
-            //do Memory.poke(memAddress+160, 31710);
-            //do Memory.poke(memAddress+192, -3697);
-            //do Memory.poke(memAddress+224, -1);
-            //do Memory.poke(memAddress+256, -4105);
-            //do Memory.poke(memAddress+288, 29262);
-            //do Memory.poke(memAddress+320, 30750);
-            //do Memory.poke(memAddress+352, 16380);
-            //do Memory.poke(memAddress+384, 4080);
-            //do Memory.poke(memAddress+416, 0);
-            //do Memory.poke(memAddress+448, 0);
-            //do Memory.poke(memAddress+480, 0);
-
-
-
             let screenLocation[memAddress] = 0;
             let memAddress = memAddress + 32;
             let screenLocation[memAddress] = 384; 
@@ -130,6 +122,41 @@ class Main {
             let screenLocation[memAddress] = 0;            
 
 
+            // Erase a pumpkin
+            let memAddress = oldLocation;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;       
+
+
+
+            // draw something static
             let screenLocation[3887] = (~32767); 
             let screenLocation[3888] = 1; 
             let screenLocation[3919] = (~32767); 
@@ -161,12 +188,18 @@ class Main {
 
             
             //do Display.scores(targets, steps);
+            let key = 0;
+            let cooldown = 4000;
 
 	    } // END IF (moved or bullet)
 
 	    // End the loop and update the key presses
 	    let moved = false;
-	    let key = Keyboard.keyPressed();
+        if (cooldown > -1) {
+            let cooldown = cooldown - 1;
+        }else {
+	        let key = keyboard[0];
+        }
 
 	    // Quit Game (Q)
 	    if ((key = 81) | (key = 113))  {
@@ -176,16 +209,15 @@ class Main {
 	} // END WHILE (main loop)
 
 	// GAME OVER - Render one or other of the splash screens
-	do Screen.clearScreen();
-
+	//do Screen.clearScreen();
 
 	// Wait for a key press before quitting
-	while (~(key = 0)) {
-	    let key = Keyboard.keyPressed();
-	}
-	while ((~(key = 32)) & (~(key = 81)) & (~(key = 113))) {
-	    let key = Keyboard.keyPressed();
-	}
+	//while (~(key = 0)) {
+	//    let key = Keyboard.keyPressed();
+	//}
+	//while ((~(key = 32)) & (~(key = 81)) & (~(key = 113))) {
+	//    let key = Keyboard.keyPressed();
+	//}
 
 	// CLEAN UPS
 	//do playerLocation.dispose();
