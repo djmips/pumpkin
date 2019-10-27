@@ -1,0 +1,197 @@
+// Pumpkin
+// by David Galloway 2019 
+
+// Halloween version of Pigs on Head 
+// on the Hack hardware platform programmed in Jack
+// For OrcaJam 2019 at Fort Tectoria in Victoria BC
+
+
+class Main {
+
+    static int screenLocation;
+
+
+    function void main() {
+
+	// Variable Declarations
+
+	// ... Arrays for communicating data between modules
+	//var Array playerLocation;
+
+	// ... Variables for managing the game
+	var char key;
+	var boolean exit, moved;
+	var int i, location, memAddress;
+	var String endText, scoreText;
+
+	// Array initialisations
+	//let playerLocation = Array.new(7);
+
+	// Class initialisations
+	//do Display.init();
+
+	// Initialisation of game variables
+	let key = 0;               /* which key the user pressed*/
+	let moved = true;          /* only updates the display if an action took place */
+	let exit = false;          /* whether the game is over*/
+
+    let location = 2048;    /* starting pos for player */
+
+    let screenLocation = 16384;
+
+
+	// Start Up Screen
+
+    // wait for any key
+	//while (~(key = 0)) { let key = Keyboard.keyPressed(); }
+	//while (key = 0)    { let key = Keyboard.keyPressed(); }
+	//while (~(key = 0)) { let key = Keyboard.keyPressed(); }
+
+	// MAIN LOOP
+	while (~exit) {
+
+	    // User Input
+	    // Forward (up-arrow)
+	    //if (key = 131) {
+		//let moved = true; }
+
+	    // Backward (down-arrow)
+	    //if (key = 133) {
+		//let moved = true; }
+
+	    // (left-arrow)
+	    if (key = 130) {
+            let location = location - 2;
+		    let moved = true; 
+        }
+	    // (right-arrow)
+	    if (key = 132) {
+            let location = location + 2;
+		    let moved = true;
+	    }
+
+	    // Only update if an action has occurred
+	    if (moved) {
+		
+            // Render all of the screen elements
+
+            // Draw a pumpkin
+
+            let memAddress = location;
+
+            //do Memory.poke(memAddress-32,0);
+            //do Memory.poke(memAddress+0, 384);
+            //do Memory.poke(memAddress+32, 384);
+            //do Memory.poke(memAddress+64, 8176);
+            //do Memory.poke(memAddress+96, 16380);
+            //do Memory.poke(memAddress+128, 32766);
+            //do Memory.poke(memAddress+160, 31710);
+            //do Memory.poke(memAddress+192, -3697);
+            //do Memory.poke(memAddress+224, -1);
+            //do Memory.poke(memAddress+256, -4105);
+            //do Memory.poke(memAddress+288, 29262);
+            //do Memory.poke(memAddress+320, 30750);
+            //do Memory.poke(memAddress+352, 16380);
+            //do Memory.poke(memAddress+384, 4080);
+            //do Memory.poke(memAddress+416, 0);
+            //do Memory.poke(memAddress+448, 0);
+            //do Memory.poke(memAddress+480, 0);
+
+
+
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 384; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 384;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 8176;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 16380;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 32766;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 31710;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = -3697; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = -1;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = -4105;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 29262;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 30750;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 16380;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 4080;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;            
+
+
+            let screenLocation[3887] = (~32767); 
+            let screenLocation[3888] = 1; 
+            let screenLocation[3919] = (~32767); 
+            let screenLocation[3920] = 1; 
+            let screenLocation[3951] = (~32767);
+            let screenLocation[3952] = 1; 
+            let screenLocation[3983] = (~32767);
+            let screenLocation[3984] = 1; 
+            let screenLocation[4015] = (~32767);
+            let screenLocation[4016] = 1; 
+            let screenLocation[4047] = (~32767);
+            let screenLocation[4048] = 1; 
+            let screenLocation[4079] = -512; 
+            let screenLocation[4080] = 127; 
+            let screenLocation[4111] = -512; 
+            let screenLocation[4112] = 127; 
+            let screenLocation[4143] = (~32767);
+            let screenLocation[4144] = 1; 
+            let screenLocation[4175] = (~32767);
+            let screenLocation[4176] = 1; 
+            let screenLocation[4207] = (~32767);
+            let screenLocation[4208] = 1; 
+            let screenLocation[4239] = (~32767);
+            let screenLocation[4240] = 1; 
+            let screenLocation[4271] = (~32767);
+            let screenLocation[4272] = 1; 
+            let screenLocation[4303] = (~32767);
+            let screenLocation[4304] = 1; 
+
+            
+            //do Display.scores(targets, steps);
+
+	    } // END IF (moved or bullet)
+
+	    // End the loop and update the key presses
+	    let moved = false;
+	    let key = Keyboard.keyPressed();
+
+	    // Quit Game (Q)
+	    if ((key = 81) | (key = 113))  {
+		let exit = true;
+	    }
+	    
+	} // END WHILE (main loop)
+
+	// GAME OVER - Render one or other of the splash screens
+	do Screen.clearScreen();
+
+
+	// Wait for a key press before quitting
+	while (~(key = 0)) {
+	    let key = Keyboard.keyPressed();
+	}
+	while ((~(key = 32)) & (~(key = 81)) & (~(key = 113))) {
+	    let key = Keyboard.keyPressed();
+	}
+
+	// CLEAN UPS
+	//do playerLocation.dispose();
+
+	return;
+
+    } // END FUNCTION (main)
+
+} // END CLASS (Main)
