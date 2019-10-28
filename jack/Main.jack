@@ -116,7 +116,7 @@ class Main {
 
         // update pumpkins
 
-        if ((pumpkinTick - tick) > 8000)
+        if ((tick - pumpkinTick) > 2000)
         {
             let i = 0;
             while (i < 12) {
@@ -402,12 +402,12 @@ class Main {
             
             //do Display.scores(targets, steps);
             let key = 0;
-            let cooldown = 3000;
+            let cooldown = 1000;
+            let moved = false;
 
 	    } //  moved
 
 	    // End the loop and update the key presses
-	    let moved = false;
         if (cooldown > -1) {
             let cooldown = cooldown - 1;
         }else {
