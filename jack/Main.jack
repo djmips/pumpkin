@@ -10,6 +10,8 @@ class Main {
 
     static int screenLocation;
     static int keyboard;
+    static int LFSR, nLFSR;
+    static int tick;
 
 
     function void main() {
@@ -17,17 +19,45 @@ class Main {
 	// Variable Declarations
 
 	// ... Arrays for communicating data between modules
-	//var Array playerLocation;
+	var Array pumpkinLocY;
+    var Array oldPumpkinLocY;
+	var Array pumpkinColumn;
+    var Array oldPumpkinColumn;
 
 	// ... Variables for managing the game
 	var char key;
-	var boolean exit, moved;
+	var boolean exit, moved, pmoved;
 	var int i, location, oldLocation, memAddress;
     var int cooldown;
 	var String endText, scoreText;
+    var int pumpkinTick;
+
+
+    // statics
+    let screenLocation = 16384;
+    let keyboard = 24576;
+    let LFSR = 1;
+    let nLFSR = 254;
+    let tick = 0;
 
 	// Array initialisations
-	//let playerLocation = Array.new(7);
+	let pumpkinLocY = Array.new(12);
+    let oldPumpkinLocY = Array.new(12);
+	let pumpkinColumn = Array.new(12);
+    //let oldPumpkinColumn = Array.new(12);
+
+    let pumpkinColumn[0] = 4;
+    let pumpkinColumn[1] = 6;
+    let pumpkinColumn[2] = 8;
+    let pumpkinColumn[3] = 10;
+    let pumpkinColumn[4] = 12;
+    let pumpkinColumn[5] = 14;
+    let pumpkinColumn[6] = 16;
+    let pumpkinColumn[7] = 18;
+    let pumpkinColumn[8] = 20;
+    let pumpkinColumn[9] = 22;
+    let pumpkinColumn[10] = 24;
+    let pumpkinColumn[11] = 26;
 
 	// Class initialisations
 	//do Display.init();
@@ -35,14 +65,14 @@ class Main {
 	// Initialisation of game variables
 	let key = 0;               /* which key the user pressed*/
 	let moved = true;          /* only updates the display if an action took place */
+    let pmoved = true;
 	let exit = false;          /* whether the game is over*/
     let cooldown = 4000;
 
     let oldLocation = 0;
-    let location = 2048;    /* starting pos for player */
+    let location = 0;    /* starting pos for player */
 
-    let screenLocation = 16384;
-    let keyboard = 24576;
+    let pumpkinTick = tick;
 
 
 	// Start Up Screen
@@ -55,75 +85,241 @@ class Main {
 	// MAIN LOOP
 	while (~exit) {
 
+        let tick = tick + 1;
+
+        // 8 bit random LFSR
+        let LFSR = LFSR + LFSR;
+        if (LFSR & 256)
+        {
+            // A xor B = (A or B) and (A' or B')
+            // 29 magic 
+            // 226 = ~29 
+            let nLFSR = ~LFSR;
+            let LFSR = (LFSR | 29) & (nLFSR | 226);
+        }
+        let LFSR = LFSR & 255;
+
+        // update pumpkins
+
+        if ((pumpkinTick - tick) > 8000)
+        {
+            let i = 0;
+            while (i < 12) {
+                let oldPumpkinLocY[i] = pumpkinLocY[i]; 
+                let pumpkinLocY[i] = pumpkinLocY[i] + 512;
+                if (pumpkinLocY[i] > 4096) {
+                    let pumpkinLocY[i] = 0;
+                } 
+                // Move on to the next i
+                let i = i + 1;
+            } // While i 
+
+            let pmoved = true;
+        }
 	    // User Input
 	    // (up-arrow)
 	    if (key = 131) {
-            let oldLocation = location;
-            let location = location - 512;
-		    let moved = true; 
         }
 
 	    // (down-arrow)
 	    if (key = 133) {        
-            let oldLocation = location;
-            let location = location + 512;
-		    let moved = true; 
         }
+
+	    // (q)
+	    if (key = 81) {
+        }
+
+	    // (a)
+	    if (key = 65) {        
+        }
+
 
 	    // (left-arrow)
 	    if (key = 130) {
-            let oldLocation = location;
-            let location = location - 2;
-		    let moved = true; 
+            if (location > -1)
+            {
+                let oldLocation = location;
+                let location = location - 2;
+		        let moved = true;
+            } 
         }
+
 	    // (right-arrow)
 	    if (key = 132) {
-            let oldLocation = location;
-            let location = location + 2;
-		    let moved = true;
+            if (location < 20)
+            {
+                let oldLocation = location;
+                let location = location + 2;
+		        let moved = true;
+            }
 	    }
 
-	    // Only update if an action has occurred
-	    if (moved) {
 		
             // Render all of the screen elements
 
-            // Draw a pumpkin
+//////////////////////////////////////////////////////////////////////////////////////////////
+        // Draw pumpkins
 
-            let memAddress = location;
-            let screenLocation[memAddress] = 0;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 384; 
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 384;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 8176;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 16380;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 32766;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 31710;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = -3697; 
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = -1;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = -4105;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 29262;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 30750;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 16380;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 4080;
-            let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 0;            
+        if (pmoved) {
+
+            let i = 0;
+            while (i < 12) {
+    //        if (0) {
+            
+                let memAddress = pumpkinLocY[i] + pumpkinColumn[i];
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 384; 
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 384;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 8176;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 16380;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 32766;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 31710;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = -3697; 
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = -1;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = -4105;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 29262;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 30750;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 16380;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 4080;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;            
 
 
-            // Erase a pumpkin
-            let memAddress = oldLocation;
+                if (1) {
+                // Erase old pumpkin location
+                let memAddress = oldPumpkinLocY[i] + pumpkinColumn[i];
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0; 
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0; 
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;
+                let memAddress = memAddress + 32;
+                let screenLocation[memAddress] = 0;   
+
+                }
+
+                // Move on to the next i
+                let i = i + 1;
+
+            } // While i 
+
+            let pmoved = false;
+            let pumpkinTick = tick;
+        }
+
+	    // Only update if an action has occurred
+	    if (moved) {
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+            // Draw main player
+            let memAddress = location + 4614;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=504;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=2044;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=3454;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=3006;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=16382;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=16382;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=16254;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=1276;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=496;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=96;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=-24336;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=-16;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=240;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=-24336;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=-16;
+            let memAddress = memAddress + 32;
+
+            // legs
+            let screenLocation[memAddress]=496;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=496;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=496;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=432;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=304;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=272;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=280;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=396;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=1950;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+
+
+            if (1) {
+            // Erase old player location
+            let memAddress = oldLocation + 4614;
             let screenLocation[memAddress] = 0;
             let memAddress = memAddress + 32;
             let screenLocation[memAddress] = 0; 
@@ -152,9 +348,44 @@ class Main {
             let memAddress = memAddress + 32;
             let screenLocation[memAddress] = 0;
             let memAddress = memAddress + 32;
-            let screenLocation[memAddress] = 0;       
+            let screenLocation[memAddress] = 0;   
+            let memAddress = memAddress + 32;
 
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0; 
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;   
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress] = 0;
 
+            } // for disabling
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // draw something static
             let screenLocation[3887] = (~32767); 
@@ -189,9 +420,9 @@ class Main {
             
             //do Display.scores(targets, steps);
             let key = 0;
-            let cooldown = 4000;
+            let cooldown = 3000;
 
-	    } // END IF (moved or bullet)
+	    } //  moved
 
 	    // End the loop and update the key presses
 	    let moved = false;
