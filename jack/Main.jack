@@ -12,6 +12,7 @@ class Main {
     static int keyboard;
     static int LFSR, nLFSR;
     static int tick;
+    static int heap;
 
 
     function void main() {
@@ -22,7 +23,6 @@ class Main {
 	var Array pumpkinLocY;
     var Array oldPumpkinLocY;
 	var Array pumpkinColumn;
-    var Array oldPumpkinColumn;
 
 	// ... Variables for managing the game
 	var char key;
@@ -39,12 +39,14 @@ class Main {
     let LFSR = 1;
     let nLFSR = 254;
     let tick = 0;
+    let heap = 8192;
 
 	// Array initialisations
-	let pumpkinLocY = Array.new(12);
-    let oldPumpkinLocY = Array.new(12);
-	let pumpkinColumn = Array.new(12);
-    //let oldPumpkinColumn = Array.new(12);
+	let pumpkinLocY = heap; 
+    let heap = heap + 12;
+    let oldPumpkinLocY = heap + 12;
+    let heap = heap + 12;
+	let pumpkinColumn = heap + 12;
 
     let pumpkinColumn[0] = 4;
     let pumpkinColumn[1] = 6;
@@ -59,18 +61,18 @@ class Main {
     let pumpkinColumn[10] = 24;
     let pumpkinColumn[11] = 26;
 
-    let pumpkinLocY[0] = 5*512;
-    let pumpkinLocY[1] = 3*512;
-    let pumpkinLocY[2] = 6*512;
-    let pumpkinLocY[3] = 8*512;
-    let pumpkinLocY[4] = 7*512;
-    let pumpkinLocY[5] = 5*512;
-    let pumpkinLocY[6] = 8*512;
-    let pumpkinLocY[7] = 9*512;
-    let pumpkinLocY[8] = 1*512;
-    let pumpkinLocY[9] = 0*512;
-    let pumpkinLocY[10] = 4*512;
-    let pumpkinLocY[11] = 6*512; 
+    let pumpkinLocY[0] = 1024; //2*512;
+    let pumpkinLocY[1] = 1536; //3*512;
+    let pumpkinLocY[2] = 3072; //6*512;
+    let pumpkinLocY[3] = 4096; //8*512;
+    let pumpkinLocY[4] = 3584; //7*512;
+    let pumpkinLocY[5] = 2560; //5*512;
+    let pumpkinLocY[6] = 4096; //8*512;
+    let pumpkinLocY[7] = 4608; //9*512;
+    let pumpkinLocY[8] = 512;  //1*512;
+    let pumpkinLocY[9] = 3584; //7*512;
+    let pumpkinLocY[10] = 2048; //4*512;
+    let pumpkinLocY[11] = 3072; //6*512; 
 
 	// Class initialisations
 	//do Display.init();
@@ -82,7 +84,7 @@ class Main {
 	let exit = false;          /* whether the game is over*/
     let cooldown = 4000;
 
-    let oldLocation = 0;
+    let oldLocation = 18;
     let location = 0;    /* starting pos for player */
 
     let pumpkinTick = tick;
