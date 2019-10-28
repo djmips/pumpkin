@@ -59,6 +59,19 @@ class Main {
     let pumpkinColumn[10] = 24;
     let pumpkinColumn[11] = 26;
 
+    let pumpkinLocY[0] = 5*512;
+    let pumpkinLocY[1] = 3*512;
+    let pumpkinLocY[2] = 6*512;
+    let pumpkinLocY[3] = 8*512;
+    let pumpkinLocY[4] = 7*512;
+    let pumpkinLocY[5] = 5*512;
+    let pumpkinLocY[6] = 8*512;
+    let pumpkinLocY[7] = 9*512;
+    let pumpkinLocY[8] = 1*512;
+    let pumpkinLocY[9] = 0*512;
+    let pumpkinLocY[10] = 4*512;
+    let pumpkinLocY[11] = 6*512; 
+
 	// Class initialisations
 	//do Display.init();
 
@@ -384,39 +397,6 @@ class Main {
             let screenLocation[memAddress] = 0;
 
             } // for disabling
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            // draw something static
-            let screenLocation[3887] = (~32767); 
-            let screenLocation[3888] = 1; 
-            let screenLocation[3919] = (~32767); 
-            let screenLocation[3920] = 1; 
-            let screenLocation[3951] = (~32767);
-            let screenLocation[3952] = 1; 
-            let screenLocation[3983] = (~32767);
-            let screenLocation[3984] = 1; 
-            let screenLocation[4015] = (~32767);
-            let screenLocation[4016] = 1; 
-            let screenLocation[4047] = (~32767);
-            let screenLocation[4048] = 1; 
-            let screenLocation[4079] = -512; 
-            let screenLocation[4080] = 127; 
-            let screenLocation[4111] = -512; 
-            let screenLocation[4112] = 127; 
-            let screenLocation[4143] = (~32767);
-            let screenLocation[4144] = 1; 
-            let screenLocation[4175] = (~32767);
-            let screenLocation[4176] = 1; 
-            let screenLocation[4207] = (~32767);
-            let screenLocation[4208] = 1; 
-            let screenLocation[4239] = (~32767);
-            let screenLocation[4240] = 1; 
-            let screenLocation[4271] = (~32767);
-            let screenLocation[4272] = 1; 
-            let screenLocation[4303] = (~32767);
-            let screenLocation[4304] = 1; 
-
             
             //do Display.scores(targets, steps);
             let key = 0;
