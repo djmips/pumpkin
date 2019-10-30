@@ -146,7 +146,7 @@
 
             gridElement = document.getElementById('grid');
             gridElement.innerHTML = str;
-            GenerateBitMap() ;
+            GenerateCode() ;
         }
 
         function OnCellClicked(cell) {
@@ -157,10 +157,10 @@
                 cell.style.backgroundColor = "black";
             else
                 cell.style.backgroundColor = "white";
-            GenerateBitMap();
+            GenerateCode();
         }
 
-        function GenerateBitMap() {
+        function GenerateCode() {
             var i, j;
             var value;
 
@@ -170,7 +170,7 @@
             generateCode = document.getElementById('generatedCode');
             generateCode.value =    methodType + " void " +
                                     document.getElementById('functionName').value +
-                                    "(int location) {\n\tlet memAddress = 16384+location;\n";
+                                    "(int location) {\n\tlet memAddress = location;\n";
 
             for (i=0; i<16; i++) {
                 //get grid binary representation
@@ -215,7 +215,7 @@
         }
 
         function GenerateCodeLine(row, value) {
-            str = "\tdo Memory.poke(memAddress+" + row*32 + ", " + value + ");\n";
+            str = "\tlet screenLocation[memAddress]=" + value + ";\n " + "\tlet memAddress = memAddress + 32;\n";
             return str;
         }
 
@@ -300,19 +300,19 @@
         <tr>
             <td><div id="grid"/></td>
             <td>
-                <form action="javascript:GenerateBitMap();">
+                <form action="javascript:GenerateCode();">
                     <table>
                         <tr><td align="left">Function Type:</td></tr>
                         <tr><td align="center">
-                                <select id="functionType" onChange="GenerateBitMap()">
+                                <select id="functionType" onChange="GenerateCode()">
                                     <option value="function" selected="selected">function</option>
                                     <option value="method">method</option>                                    
                                 </select>
                         </td></tr>
                         <tr><td align="left">Function Name:</td></tr>
-                        <tr><td align="left"><input type="text" value="draw" id="functionName" onkeyup="GenerateBitMap()"/></td></tr>
+                        <tr><td align="left"><input type="text" value="draw" id="functionName" onkeyup="GenerateCode()"/></td></tr>
                         <tr><td></td></tr>
-                        <tr><td align="center"><input type="button" value="Generate Code >>" onclick="GenerateBitMap()"/></td></tr>
+                        <tr><td align="center"><input type="button" value="Generate Code >>" onclick="GenerateCode()"/></td></tr>
                         <tr><td></td></tr>
                         <tr><td align="center"><input type="button" value="SaveData >>" onclick="SaveData()"/></td></tr>
 
