@@ -136,7 +136,7 @@ class CodeWriter:
         beginning of the output file.
         """
         self._write_asm_commands(['D=A[256]', 'M=D[SP]'])
-        self.write_call('Sys.init', 0)
+        #self.write_call('Sys.init', 0)
 
     def write_label(self, label):
         """Writes Hack ASM that effects the
