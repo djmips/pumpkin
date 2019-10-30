@@ -1,0 +1,13 @@
+# Python byte compiled optimized dll files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python C ext
+*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+
