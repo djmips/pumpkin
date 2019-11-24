@@ -24,7 +24,9 @@ def generateCode(filename):
         if (value > 32768):
             #print (value, end='')
             value = value - 65536
-        print(value)
+        codeline = "\tlet screenLocation[memAddress]=" + str(value) + ";\n " + "\tlet memAddress = memAddress + 32;";
+        print (codeline)
+
         #print ('')
 
 def main():
