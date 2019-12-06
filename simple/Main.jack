@@ -1,0 +1,68 @@
+// Test draw
+// by David Galloway 2019
+
+class Main {
+
+    static int screenLocation;
+    static int memAddress;
+
+    function void main() {
+
+        // local variable Declarations
+        var boolean exit;
+
+        // statics
+        let screenLocation = 16384;
+        let exit = false;  
+
+        // MAIN LOOP
+        while (~exit) {
+          
+            // Render all of the screen elements
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            // Draw a pumpkin
+            let memAddress = 0;
+            
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=3888;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=8160;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=16368;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=30968;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=30972;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=28302;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=28558;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=29166;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=14846;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=7230;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=3868;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=1020;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=240;
+            let memAddress = memAddress + 32;
+            let screenLocation[memAddress]=0;
+            let memAddress = memAddress + 32;
+
+            
+        } // END WHILE (main loop)
+
+
+	    return;
+
+    } // END FUNCTION (main)
+
+} // END CLASS (Main)
