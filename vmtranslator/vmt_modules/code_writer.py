@@ -25,6 +25,11 @@ class CodeWriter:
         self._bool_jmp_logic_symbol = ''
         self._dynamic_labels = {'lt': 0, 'eq': 0, 'gt': 0, 'ret': 0}
 
+
+    def _write_comment(self, comment):
+        self._asm_file.write('// ' + comment)
+        self._asm_file.write('\n')
+
     def _write_asm_commands(self, asm_commands):
         self._asm_file.writelines('{}\n'.format(x) for x in asm_commands)
 
@@ -43,33 +48,42 @@ class CodeWriter:
         if command in ['neg', 'not']:
             out.append('A=M-1[SP]')
             if command == 'neg':
+                self._write_comment('NEG')
                 out.append('M=-M')
             elif command == 'not':
+                self._write_comment('NOT')
                 out.append('M=!M')
         else:
             out.extend(['AM=M-1[SP]', 'D=M', 'A=A-1'])
             if command == 'add':
+                self._write_comment('ADD')
                 out.append('M=M+D')
             elif command == 'sub':
+                self._write_comment('SUB')
                 out.append('M=M-D')
             elif command in ['lt', 'eq', 'gt']:
                 out.extend(['D=M-D', 'M=0'])
                 if command == 'lt':
+                    self._write_comment('LT')
                     self._bool_jmp_logic_symbol = 'LTJGE${}'.format(self._dynamic_labels['lt'])
                     self._dynamic_labels['lt'] += 1
                     out.append('D;JGE[{}]'.format(self._bool_jmp_logic_symbol))
                 elif command == 'eq':
+                    self._write_comment('EQ')                   
                     self._bool_jmp_logic_symbol = 'EQJNE${}'.format(self._dynamic_labels['eq'])
                     self._dynamic_labels['eq'] += 1
                     out.append('D;JNE[{}]'.format(self._bool_jmp_logic_symbol))
                 elif command == 'gt':
+                    self._write_comment('GT')
                     self._bool_jmp_logic_symbol = 'GTJLE${}'.format(self._dynamic_labels['gt'])
                     self._dynamic_labels['gt'] += 1
                     out.append('D;JLE[{}]'.format(self._bool_jmp_logic_symbol))
                 out.extend(['A=M-1[SP]', 'M=-1', '({})'.format(self._bool_jmp_logic_symbol)])
             elif command == 'and':
+                self._write_comment('AND')
                 out.append('M=M&D')
             elif command == 'or':
+                self._write_comment('OR')
                 out.append('M=M|D')
         self._write_asm_commands(out)
 
@@ -81,6 +95,7 @@ class CodeWriter:
         out = []
         out.append('D=A[{}]'.format(index))
         if command is Command.C_PUSH:
+            self._write_comment("PUSH")
             if segment == 'constant':
                 out.extend(['AM=M+1[SP]', 'A=A-1', 'M=D'])
             elif segment in ['local', 'argument', 'this', 'that',
@@ -104,6 +119,7 @@ class CodeWriter:
                 raise ValueError('Invalid segment ', segment)
                 self.close()
         elif command is Command.C_POP:
+            self._write_comment("POP")
             if segment in ['local', 'argument', 'this', 'that',
                            'pointer', 'temp', 'static']:
                 if segment == 'local':
@@ -148,12 +164,14 @@ class CodeWriter:
         """Writes Hack ASM that effects the
         goto command.
         """
+        self._write_comment('GOTO')
         self._write_asm_commands(['0;JMP[{}]'.format(label)])
 
     def write_if(self, label):
         """Writes Hack ASM that effects the
         if-goto command.
         """
+        self._write_comment('IF GOTO')
         self._write_asm_commands(['AM=M-1[SP]', 'D=M',
                                   'D;JNE[{}]'.format(label)])
 
@@ -161,6 +179,7 @@ class CodeWriter:
         """Push the value of a special pointer,
         given the name (LCL, ARG, THIS, THAT).
         """
+        self._write_comment('PUSH PTR')
         self._write_asm_commands(['D=M[{}]'.format(pointer_name), 'AM=M+1[SP]',
                                   'A=A-1', 'M=D'])
 
@@ -170,6 +189,7 @@ class CodeWriter:
         the pointers and working stack for
         the subroutine.
         """
+        self._write_comment('CALL')
         return_label = '{}$ret.{}'.format(function_name, self._dynamic_labels['ret'])
         self._dynamic_labels['ret'] += 1
         self._write_asm_commands(['D=A[{}]'.format(return_label), 'AM=M+1[SP]',
@@ -189,6 +209,7 @@ class CodeWriter:
         return command. Ultimately, it sets
         back up the pointers for the caller.
         """
+        self._write_comment('RETURN')
         self._write_asm_commands(['D=M[LCL]', 'M=D[R13]',
                                   'D=D-A[5]', 'A=D', 'D=M', 'M=D[R14]',
                                   'AM=M-1[SP]', 'D=M', 'A=M[ARG]', 'M=D',
