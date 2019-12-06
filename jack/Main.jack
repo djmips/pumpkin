@@ -151,26 +151,12 @@ class Main {
 
             let pmoved = true;
         }
-	    // User Input
-	    // (up-arrow)
-	    if (key = 131) {
-        }
-
-	    // (down-arrow)
-	    if (key = 133) {        
-        }
-
-	    // (q)
-	    if (key = 81) {
-        }
-
-	    // (a)
-	    if (key = 65) {        
-        }
 
 
-	    // (left-arrow)
-	    if (key = 130) {
+	    // User Input ///////////////////////////////////////
+
+	    // (a) Left
+	    if (key = 65) {
             if (location > -1)
             {
                 let oldLocation = location;
@@ -179,8 +165,8 @@ class Main {
             } 
         }
 
-	    // (right-arrow)
-	    if (key = 132) {
+        // (d) Right
+	    if (key = 68) {
             if (location < 20)
             {
                 let oldLocation = location;
