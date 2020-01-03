@@ -9,14 +9,14 @@ class Main {
     function void main() {
 
         // local variable Declarations
-        var boolean exit;
+        //var boolean exit;
 
         // statics
         let screenLocation = 16384;
-        let exit = false;  
+        //let exit = false;  
 
         // MAIN LOOP
-        while (~exit) {
+        //while (~exit) {
           
             // Render all of the screen elements
 
@@ -58,7 +58,7 @@ class Main {
             let memAddress = memAddress + 32;
 
             
-        } // END WHILE (main loop)
+        //} // END WHILE (main loop)
 
 
 	    return;
