@@ -8,7 +8,7 @@
 
 class Main {
 
-    static int screenLocation;
+    static Array screenLocation;
     static int keyboard;
     static int LFSR, nLFSR;
     static int tick;
