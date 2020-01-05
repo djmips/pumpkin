@@ -48,7 +48,6 @@ class Main {
     while( i < 8192 ) {
         let screenLocation[i] = 0;
     }
-    return;
 
 	// Array initialisations
 
