@@ -43,6 +43,13 @@ class Main {
     let tick = 0;
     let heap = 8192;
 
+    // Clear screen
+    let i = 0;
+    while( i < 8192 ) {
+        let screenLocation[i] = 0;
+    }
+    return;
+
 	// Array initialisations
 
     //------------------------
